@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import { useState } from "react"
 import axios from "axios"
 
 const ProductForm = (props) => {
@@ -8,7 +8,7 @@ const ProductForm = (props) => {
     const [description, setDescription] = useState("")
 
     const submitHandler = (e) => {
-        e.preventDefault();
+        e.preventDefault()
         axios.post("http://localhost:8000/api/newProduct", {
             title,
             price,
@@ -60,7 +60,7 @@ const ProductForm = (props) => {
                     />
                 </div>
                 <br />
-        <button>Create Product</button>
+        <button type="submit">Create Product</button>
             </form>
         </div>
     )
