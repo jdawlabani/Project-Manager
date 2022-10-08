@@ -1,26 +1,37 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import axios from "axios"
+import { useParams, useNavigate } from "react-router-dom"
 
-const ProductForm = (props) => {
-
-    const {product, setProduct} = props
+const EditProduct = (props) => {
     const [title, setTitle] = useState("")
     const [price, setPrice] = useState("")
     const [description, setDescription] = useState("")
-
+    const [originalTitle, setOriginalTitle] = useState("")
+    const {id} = useParams()
+    const navigate = useNavigate()
+    useEffect(() => {
+        axios.get(`http://localhost:8000/api/producs/${id}`)
+            .then((res) => {
+                console.log(res.data)
+                setTitle(res.data.title)
+                setPrice(res.data.price)
+                setDescription(res.data.description)
+                setOriginalTitle(res.data.title)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }, [])
+    
     const submitHandler = (e) => {
         e.preventDefault()
-        axios.post("http://localhost:8000/api/newProduct", {
+        axios.put(`http://localhost:8000/api/${id}`, {
             title,
             price,
             description,
         }).then((res) => {
             console.log(res)
             console.log(res.data)
-            setProduct([...product, res.data])
-            setTitle("")
-            setPrice("")
-            setDescription("")
+            navigate('/')
         }).catch((err) => {
             console.log(err);
         });
@@ -28,7 +39,7 @@ const ProductForm = (props) => {
 
     return (
         <div>
-            <h1>Product Manager</h1>
+            <h1>Edit {originalTitle}</h1>
             <form onSubmit={submitHandler}>
                 <div className="form-fields">
                 <label>Title</label>
@@ -62,10 +73,10 @@ const ProductForm = (props) => {
                     />
                 </div>
                 <br />
-        <button type="submit">Create Product</button>
+        <button type="submit">Update Product</button>
             </form>
         </div>
     )
 }
 
-export default ProductForm
+export default EditProduct

@@ -20,7 +20,7 @@ const getAllProducts = (req, res) => {
 }
 
 const getOneProduct = (req,res) => {
-    Product.findOne({_id: req.params._id})
+    Product.findOne({_id: req.params.id})
     .then((result) => {
         res.json(result)
     }).catch((err) => {
@@ -28,11 +28,31 @@ const getOneProduct = (req,res) => {
     })
 }
 
+const updateProduct = (req,res) => {
+    Product.findByIdAndUpdate({_id: req.params.id}, req.body, {new: true, runValidators: true})
+    .then((updatedProduct) => {
+        res.json(updateProduct)
+    }).catch((err) => {
+        console.log(err)
+    })
+}
+const deleteProduct = (req,res) => {
+    Product.deleteOne({_id: req.params.id})
+    .then((deleted) => {
+        res.json(deleted)
+    }).catch((err) => {
+        console.log(err)
+    })
+}
+
+
 
 module.exports = {
     createProduct,
     getAllProducts,
-    getOneProduct
+    getOneProduct,
+    updateProduct,
+    deleteProduct
 }
 
 

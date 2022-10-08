@@ -1,26 +1,40 @@
 import axios from "axios"
 import { useState, useEffect } from "react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const SingleProduct = (props) => {
     const {id} = useParams()
-    const [product, setProduct] = useState({})
+    const [singleProduct, setSingleProduct] = useState({})
+    const navigate = useNavigate()
 
     useEffect(() => {
-        axios.get(`http://localhost:8000/api/producs/${id}`)
+        axios.get(`http://localhost:8000/api/products/${id}`)
         .then((res) => {
-            setProduct(res.data)
+            console.log(res.data)
+            setSingleProduct(res.data)
         }).catch((err) => {
             console.log(err)
         })
-    }, [])
+    }, [id])
     
+    const deleteHandler = () => {
+        axios.delete(`http://localhost:8000/api/products/${id}`)
+            .then((res) => {
+                console.log(res);
+                console.log(res.data);
+                navigate("/");
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
     return (
         <div>
-            
-            <p>Title: {product.title}</p>
-            <p>Price: {product.price}</p>
-            <p>Description: {product.description}</p>
+            <p>Title: {singleProduct.title}</p>
+            <p>Price: {singleProduct.price}</p>
+            <p>Description: {singleProduct.description}</p>
+            <button onClick={deleteHandler}>Delete</button>
         </div>
     )
 
